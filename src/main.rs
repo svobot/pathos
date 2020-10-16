@@ -65,4 +65,43 @@ extern "C" fn kmain() {
 
     println!("This is my operating system!");
     println!("I'm so awesome. If you start typing something, I'll show you what you typed!");
+
+    loop {
+        if let Some(c) = uart.get() {
+            match c {
+                127 | 8 => {
+                    print!("{}{}{}", 8 as char, ' ', 8 as char);
+                }
+                10 | 13 => {
+                    println!();
+                }
+                27 => {
+                    if let Some(91) = uart.get() {
+                        if let Some(next_c) = uart.get() {
+                            match next_c as char {
+                                'A' => {
+                                    println!("That's the up arrow!");
+                                }
+                                'B' => {
+                                    println!("That's the down arrow!");
+                                }
+                                'C' => {
+                                    println!("That's the right arrow!");
+                                }
+                                'D' => {
+                                    println!("That's the left arrow!");
+                                }
+                                _ => {
+                                    println!("That's something else.....");
+                                }
+                            }
+                        }
+                    }
+                }
+                _ => {
+                    print!("{}", c as char);
+                }
+            }
+        }
+    }
 }
